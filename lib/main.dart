@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -7,7 +6,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
 
   // This widget is the root of your application.
   @override
@@ -97,6 +95,18 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.green,
+              ),
+              child: const Text(
+                "Hello World!",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
+              ),
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),
