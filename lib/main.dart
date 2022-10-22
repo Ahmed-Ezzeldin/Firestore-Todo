@@ -1,7 +1,12 @@
-import 'package:firebase_mvvm/home_screen.dart';
+import 'package:firebase_mvvm/model/services/preference.dart';
+import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  /// ============================= Initialize Preference
+  await Preference.initialize();
+
   runApp(const MyApp());
 }
 
@@ -12,8 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Firebase To Do",
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: "Firebase ToDo",
+      theme: ThemeData(primarySwatch: Colors.teal),
       home: const HomeScreen(),
     );
   }
