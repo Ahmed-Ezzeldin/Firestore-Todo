@@ -1,10 +1,11 @@
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
+import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:firebase_mvvm/view/screens/signup_screen.dart';
 import 'package:firebase_mvvm/view/styles/app_colors.dart';
-import 'package:firebase_mvvm/view/widgets/main_button.dart';
-import 'package:firebase_mvvm/view/widgets/main_textfield.dart';
+import 'package:firebase_mvvm/view/widgets/components/main_button.dart';
+import 'package:firebase_mvvm/view/widgets/components/main_textfield.dart';
 import 'package:flutter/material.dart';
 
 class SigninScreen extends StatelessWidget {
@@ -30,7 +31,8 @@ class SigninScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: mediaSize.height * 0.1),
                     const Icon(
-                      Icons.flutter_dash,
+                      // Icons.task_alt,
+                      Icons.task_alt,
                       size: 150,
                       color: AppColors.primaryColor,
                     ),
@@ -95,6 +97,7 @@ class SigninScreenModel extends BaseModel {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
       AppHelper.printt("Email: ${emailController.text} \nPassword: ${passwordController.text}");
+      AppHelper.push(context, const HomeScreen());
     } else {
       autovalidateMode = AutovalidateMode.always;
       setState();

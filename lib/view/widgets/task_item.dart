@@ -13,7 +13,7 @@ class TaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.flutter_dash),
+      leading: const Icon(Icons.task_alt),
       title: Text(title),
       subtitle: Text(subtitle),
     );

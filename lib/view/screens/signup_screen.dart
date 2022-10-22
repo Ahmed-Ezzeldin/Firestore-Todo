@@ -1,9 +1,10 @@
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
+import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:firebase_mvvm/view/styles/app_colors.dart';
-import 'package:firebase_mvvm/view/widgets/main_button.dart';
-import 'package:firebase_mvvm/view/widgets/main_textfield.dart';
+import 'package:firebase_mvvm/view/widgets/components/main_button.dart';
+import 'package:firebase_mvvm/view/widgets/components/main_textfield.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class SignupScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: mediaSize.height * 0.1),
                     const Icon(
-                      Icons.flutter_dash,
+                      Icons.task_alt,
                       size: 150,
                       color: AppColors.primaryColor,
                     ),
@@ -39,7 +40,7 @@ class SignupScreen extends StatelessWidget {
                       borderType: BorderType.underline,
                       prefixIcon: const Icon(Icons.person_outline),
                       validator: Validator.username,
-                      hint: "Username",
+                      hint: "Name",
                     ),
                     MainTextField(
                       controller: model.emailController,
@@ -101,7 +102,9 @@ class SignupScreenModel extends BaseModel {
   void submitFun() {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
-      AppHelper.printt("Email: ${emailController.text} \nPassword: ${passwordController.text}");
+      AppHelper.printt(
+          "name: ${nameController.text} \nEmail: ${emailController.text} \nPassword: ${passwordController.text}");
+      AppHelper.push(context, const HomeScreen());
     } else {
       autovalidateMode = AutovalidateMode.always;
       setState();

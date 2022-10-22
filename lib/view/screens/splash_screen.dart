@@ -1,7 +1,6 @@
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
-import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:firebase_mvvm/view/screens/signin_screen.dart';
 import 'package:firebase_mvvm/view/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +23,13 @@ class SplashScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Icon(
-                  Icons.flutter_dash,
+                  Icons.task_alt,
                   size: 150,
                   color: Colors.white,
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Firebas ToDo",
+                  "Firebase ToDo",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
@@ -54,7 +53,6 @@ class SplashScreenModel extends BaseModel {
 
   void delayFun() {
     Future.delayed(const Duration(milliseconds: 2000), () {
-      // AppHelper.pushReplaceAll(context, const HomeScreen());
       AppHelper.pushReplaceAll(context, const SigninScreen());
     });
   }
