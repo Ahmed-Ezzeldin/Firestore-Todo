@@ -1,5 +1,6 @@
 import 'package:firebase_mvvm/model/services/preference.dart';
 import 'package:firebase_mvvm/view/screens/home_screen.dart';
+import 'package:firebase_mvvm/view/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Firebase ToDo",
       theme: ThemeData(primarySwatch: Colors.teal),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
