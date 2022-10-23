@@ -131,6 +131,7 @@ class SignupScreenModel extends BaseModel {
         email: emailController.text,
         password: passwordController.text,
       );
+      AppHelper.printColor(credential);
       await auth.signUp(
         UserModel(
           uid: credential.user?.uid,
