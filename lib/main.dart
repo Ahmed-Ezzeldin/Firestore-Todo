@@ -1,5 +1,4 @@
 import 'package:firebase_mvvm/model/services/preference.dart';
-import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:firebase_mvvm/view/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 

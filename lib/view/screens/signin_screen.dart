@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
@@ -41,6 +42,7 @@ class SigninScreen extends StatelessWidget {
                       controller: model.emailController,
                       borderType: BorderType.underline,
                       prefixIcon: const Icon(Icons.alternate_email),
+                      keyboardType: TextInputType.emailAddress,
                       validator: Validator.email,
                       hint: "Email",
                     ),
@@ -48,6 +50,7 @@ class SigninScreen extends StatelessWidget {
                       controller: model.passwordController,
                       borderType: BorderType.underline,
                       prefixIcon: const Icon(Icons.password),
+                      keyboardType: TextInputType.visiblePassword,
                       validator: Validator.password,
                       hint: "Password",
                     ),

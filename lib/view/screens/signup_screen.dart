@@ -38,6 +38,7 @@ class SignupScreen extends StatelessWidget {
                     MainTextField(
                       controller: model.nameController,
                       borderType: BorderType.underline,
+                      keyboardType: TextInputType.name,
                       prefixIcon: const Icon(Icons.person_outline),
                       validator: Validator.username,
                       hint: "Name",
@@ -46,6 +47,7 @@ class SignupScreen extends StatelessWidget {
                       controller: model.emailController,
                       borderType: BorderType.underline,
                       prefixIcon: const Icon(Icons.alternate_email),
+                      keyboardType: TextInputType.emailAddress,
                       validator: Validator.email,
                       hint: "Email",
                     ),
@@ -53,6 +55,7 @@ class SignupScreen extends StatelessWidget {
                       controller: model.passwordController,
                       borderType: BorderType.underline,
                       prefixIcon: const Icon(Icons.password),
+                      keyboardType: TextInputType.visiblePassword,
                       validator: Validator.password,
                       hint: "Password",
                     ),
