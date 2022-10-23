@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseWidget<HomeScreenModel>(
       initState: (model) => WidgetsBinding.instance.addPostFrameCallback((_) {
-        model.readUser();
+        model.getAllTasks();
       }),
       model: HomeScreenModel(context: context),
       builder: (_, model, child) {
@@ -43,14 +43,37 @@ class HomeScreen extends StatelessWidget {
               : ListView.builder(
                   itemCount: model.tasksList.length,
                   itemBuilder: (context, index) {
-                    return TaskItem(
-                      title: "${model.tasksList[index].title}",
-                      content: "${model.tasksList[index].content}",
+                    TaskModel task = model.tasksList[index];
+                    return Dismissible(
+                      key: Key(task.id!),
+                      background: const SizedBox(),
+                      secondaryBackground: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        child: Icon(
+                          Icons.delete,
+                          size: 35,
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                      ),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (_) {
+                        model.onDismissed(index);
+                      },
+                      child: TaskItem(
+                        title: "${task.title}",
+                        content: "${task.content}",
+                        onTap: () async {
+                          model.onAddPressed(task: task);
+                        },
+                      ),
                     );
                   },
                 ),
           floatingActionButton: FloatingActionButton(
-            onPressed: model.onAddPressed,
+            onPressed: () {
+              model.onAddPressed();
+            },
             child: const Icon(Icons.add, size: 30),
           ),
         );
@@ -68,7 +91,14 @@ class HomeScreenModel extends BaseModel {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<void> readUser() async {
+  void onAddPressed({TaskModel? task}) async {
+    final res = await AppHelper.push(context, AddTaskScreen(task: task));
+    if (res == true) {
+      getAllTasks();
+    }
+  }
+
+  Future<void> getAllTasks() async {
     try {
       setBusy();
       QuerySnapshot querySnapshot = await firestore.collection(auth.user?.uid ?? "Not_User").get();
@@ -79,10 +109,24 @@ class HomeScreenModel extends BaseModel {
     setIdle();
   }
 
-  void onAddPressed() async {
-    final res = await AppHelper.push(context, const AddTaskScreen());
-    if (res == true) {
-      readUser();
+  onDismissed(int index) async {
+    try {
+      AppHelper.printt(tasksList[index].title!);
+      await deleteTask(tasksList[index].id!);
+      tasksList.removeAt(index);
+      setState();
+    } catch (error) {
+      AppHelper.printt(error);
     }
+  }
+
+  Future<void> deleteTask(String id) async {
+    try {
+      setBusy();
+      await firestore.collection(auth.user?.uid ?? "Not_User").doc(id).delete();
+    } catch (error) {
+      AppHelper.printt(error);
+    }
+    setIdle();
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_mvvm/model/models/task_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
@@ -11,16 +12,23 @@ import 'package:firebase_mvvm/view/widgets/components/main_textfield.dart';
 import 'package:flutter/material.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+  const AddTaskScreen({
+    this.task,
+    Key? key,
+  }) : super(key: key);
+
+  final TaskModel? task;
 
   @override
   Widget build(BuildContext context) {
     final Size mediaSize = MediaQuery.of(context).size;
     return BaseWidget<AddTaskScreenModel>(
-      model: AddTaskScreenModel(context: context),
+      model: AddTaskScreenModel(context: context, task: task),
       builder: (_, model, child) {
         return Scaffold(
-          appBar: AppBar(title: const Text("Add Task Screen")),
+          appBar: AppBar(
+            title: task == null ? const Text("Add Task Screen") : const Text("Add Task Screen"),
+          ),
           body: SingleChildScrollView(
             child: Container(
               width: double.infinity,
@@ -29,34 +37,55 @@ class AddTaskScreen extends StatelessWidget {
                 key: model.formKey,
                 autovalidateMode: model.autovalidateMode,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MainTextField(
                       controller: model.titleController,
                       validator: Validator.required,
                       borderRadius: 5,
-                      hint: "Title",
+                      borderWidth: 0.0001,
                       isFilled: true,
-                      textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                      hint: "Title",
+                      textStyle: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800),
                     ),
                     MainTextField(
                       controller: model.contentController,
                       validator: Validator.required,
                       borderRadius: 5,
-                      hint: "Task Content",
+                      borderWidth: 0.0001,
                       isFilled: true,
+                      hint: "Task Content",
+                      textInputAction: TextInputAction.newline,
+                      borderType: BorderType.outline,
                       keyboardType: TextInputType.multiline,
-                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                      textStyle: const TextStyle(color: Colors.black54, fontSize: 17, fontWeight: FontWeight.w500),
                       maxLines: mediaSize.height ~/ 35,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
+                    if (task != null)
+                      Wrap(
+                        children: [
+                          const Text("Create at: ", style: TextStyle(fontSize: 12)),
+                          Text("${task?.createAt}", style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+                        ],
+                      ),
+                    if (task != null)
+                      Wrap(
+                        children: [
+                          const Text("Update at: ", style: TextStyle(fontSize: 12)),
+                          Text("${task?.lastupdate}", style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+                        ],
+                      ),
+                    const SizedBox(height: 10),
                     model.busy
                         ? const MainProgress()
                         : MainButton(
                             width: double.infinity,
                             radius: 5,
-                            title: "Add Task",
-                            onPressed: model.createTask,
+                            title: task == null ? "Add Task" : "Update Task",
+                            onPressed: () {
+                              task == null ? model.createTask() : model.updateTask(task!.id!);
+                            },
                           ),
                   ],
                 ),
@@ -71,7 +100,13 @@ class AddTaskScreen extends StatelessWidget {
 
 class AddTaskScreenModel extends BaseModel {
   final BuildContext context;
-  AddTaskScreenModel({required this.context});
+  final TaskModel? task;
+  AddTaskScreenModel({required this.context, this.task}) {
+    if (task != null) {
+      titleController.text = task?.title ?? "";
+      contentController.text = task?.content ?? "";
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
   var autovalidateMode = AutovalidateMode.disabled;
@@ -84,13 +119,15 @@ class AddTaskScreenModel extends BaseModel {
     if (formKey.currentState!.validate()) {
       setBusy();
       AppHelper.unfocusFun(context);
-      String id = DateTime.now().toString();
+      String currentTime = DateTime.now().toString();
       try {
         setBusy();
-        await firestore.collection(auth.user?.uid ?? "Not_User").doc(id).set({
-          "id": id,
+        await firestore.collection(auth.user?.uid ?? "Not_User").doc(currentTime).set({
+          "id": currentTime,
           "title": titleController.text,
           "content": contentController.text,
+          "createAt": currentTime.substring(0, 19),
+          "lastupdate": currentTime.substring(0, 19),
         });
         autovalidateMode = AutovalidateMode.disabled;
       } catch (error) {
@@ -102,5 +139,27 @@ class AddTaskScreenModel extends BaseModel {
       setState();
     }
     setIdle();
+  }
+
+  Future<void> updateTask(String id) async {
+    if (formKey.currentState!.validate()) {
+      AppHelper.unfocusFun(context);
+      String currentTime = DateTime.now().toString();
+      try {
+        setBusy();
+        await firestore.collection(auth.user?.uid ?? "Not_User").doc(id).update({
+          "title": titleController.text,
+          "content": contentController.text,
+          "lastupdate": currentTime.substring(0, 19),
+        });
+        autovalidateMode = AutovalidateMode.disabled;
+      } catch (error) {
+        AppHelper.printt(error);
+      }
+      Navigator.of(context).pop(true);
+    } else {
+      autovalidateMode = AutovalidateMode.always;
+      setState();
+    }
   }
 }
