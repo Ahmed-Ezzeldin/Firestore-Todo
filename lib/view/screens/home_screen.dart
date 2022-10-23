@@ -4,6 +4,7 @@ import 'package:firebase_mvvm/model/services/auth_service.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
 import 'package:firebase_mvvm/model/services/firebase_auth_service.dart';
+import 'package:firebase_mvvm/view/screens/add_task_screen.dart';
 import 'package:firebase_mvvm/view/screens/splash_screen.dart';
 import 'package:firebase_mvvm/view/widgets/task_item.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,12 @@ class HomeScreen extends StatelessWidget {
                 title: "Title Title",
                 subtitle: "Subitle subtitle subtitle subtitle subtitle",
               );
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add, size: 30),
+            onPressed: () {
+              AppHelper.push(context, const AddTaskScreen());
             },
           ),
         );
