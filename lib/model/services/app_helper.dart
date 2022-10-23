@@ -119,11 +119,12 @@ class AppHelper {
     int seconds = 5,
     SnackBarBehavior? behavior,
     bool isTop = false,
+    TextAlign textAlign = TextAlign.start
   }) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message, textAlign: textAlign),
         duration: Duration(seconds: seconds),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
         behavior: behavior,

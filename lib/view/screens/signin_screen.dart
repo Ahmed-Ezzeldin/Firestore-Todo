@@ -1,11 +1,20 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_mvvm/model/models/user_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
+import 'package:firebase_mvvm/model/services/auth_service.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
+import 'package:firebase_mvvm/model/services/firebase_auth_service.dart';
+import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:firebase_mvvm/view/screens/signup_screen.dart';
 import 'package:firebase_mvvm/view/styles/app_colors.dart';
 import 'package:firebase_mvvm/view/widgets/components/main_button.dart';
+import 'package:firebase_mvvm/view/widgets/components/main_progress.dart';
 import 'package:firebase_mvvm/view/widgets/components/main_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -55,12 +64,14 @@ class SigninScreen extends StatelessWidget {
                       hint: "Password",
                     ),
                     SizedBox(height: mediaSize.height * 0.06),
-                    MainButton(
-                      radius: 5,
-                      width: double.infinity,
-                      title: "Sign in",
-                      onPressed: model.submitFun,
-                    ),
+                    model.busy
+                        ? const MainProgress()
+                        : MainButton(
+                            radius: 5,
+                            width: double.infinity,
+                            title: "Sign in",
+                            onPressed: model.submitFun,
+                          ),
                     SizedBox(height: mediaSize.height * 0.03),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -89,7 +100,10 @@ class SigninScreen extends StatelessWidget {
 
 class SigninScreenModel extends BaseModel {
   final BuildContext context;
-  SigninScreenModel({required this.context});
+  SigninScreenModel({required this.context}) {
+    emailController.text = "ahmed@test.com";
+    passwordController.text = "123456789";
+  }
 
   final formKey = GlobalKey<FormState>();
   var autovalidateMode = AutovalidateMode.disabled;
@@ -99,11 +113,42 @@ class SigninScreenModel extends BaseModel {
   void submitFun() {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
-      AppHelper.printt("Email: ${emailController.text} \nPassword: ${passwordController.text}");
-      AppHelper.push(context, const HomeScreen());
+      signIn();
     } else {
       autovalidateMode = AutovalidateMode.always;
       setState();
     }
+  }
+
+  void signIn() async {
+    try {
+      setBusy();
+      UserCredential credential = await FirebaseAuthService().signIn(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      AppHelper.printColor(credential);
+      await auth.signIn(
+        UserModel(
+          uid: credential.user?.uid,
+          displayName: credential.user?.displayName,
+          email: credential.user?.email,
+          phoneNumber: credential.user?.phoneNumber,
+        ),
+      );
+      AppHelper.pushReplaceAll(context, const HomeScreen());
+    } on FirebaseAuthException catch (error) {
+      AppHelper.showSnackBarMessage(
+        context,
+        behavior: SnackBarBehavior.floating,
+        radius: 5,
+        textAlign: TextAlign.center,
+        message: "${error.message}",
+      );
+      AppHelper.printt(error, isError: true);
+    } catch (error) {
+      AppHelper.printt(error);
+    }
+    setIdle();
   }
 }
