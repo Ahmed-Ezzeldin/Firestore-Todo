@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_mvvm/model/models/user_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
-import 'package:firebase_mvvm/model/services/firebase_auth_service.dart';
+import 'package:firebase_mvvm/model/services/fireauth_service.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class SignupScreenViewmodel extends BaseModel {
   void signUp() async {
     try {
       setBusy();
-      UserCredential credential = await FirebaseAuthService().signUp(
+      UserCredential credential = await FireauthService.signUp(
         email: emailController.text,
         password: passwordController.text,
       );

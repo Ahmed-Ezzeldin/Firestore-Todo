@@ -1,9 +1,8 @@
-
 // ignore_for_file: use_build_context_synchronously
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_mvvm/model/models/task_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:firebase_mvvm/model/services/base/base_model.dart';
+import 'package:firebase_mvvm/model/services/firestore_service.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:flutter/material.dart';
 
@@ -22,8 +21,6 @@ class AddTaskScreenViewmodel extends BaseModel {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   Future<void> createTask() async {
     if (formKey.currentState!.validate()) {
       setBusy();
@@ -31,7 +28,7 @@ class AddTaskScreenViewmodel extends BaseModel {
       String currentTime = DateTime.now().toString();
       try {
         setBusy();
-        await firestore.collection(auth.user?.uid ?? "Not_User").doc(currentTime).set({
+        FirestoreService.setData(collectionPath: auth.user?.uid ?? "Not_User", id: currentTime, data: {
           "id": currentTime,
           "title": titleController.text,
           "content": contentController.text,
@@ -56,7 +53,7 @@ class AddTaskScreenViewmodel extends BaseModel {
       String currentTime = DateTime.now().toString();
       try {
         setBusy();
-        await firestore.collection(auth.user?.uid ?? "Not_User").doc(id).update({
+        FirestoreService.updateData(collectionPath: auth.user?.uid ?? "Not_User", id: id, data: {
           "title": titleController.text,
           "content": contentController.text,
           "updateAt": currentTime.substring(0, 19),

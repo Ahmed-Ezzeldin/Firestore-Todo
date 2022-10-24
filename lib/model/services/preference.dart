@@ -13,7 +13,7 @@ class Preference {
   static Future<void> initialize() async {
     if (sharedPref == null) {
       sharedPref = await SharedPreferences.getInstance();
-      setDefaultValues(getString(PrefKeys.isUserLoged) == null);
+      setDefaultValues(getBool(PrefKeys.isUserLoged) == null);
     }
   }
 

@@ -1,12 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_mvvm/model/models/task_model.dart';
-import 'package:firebase_mvvm/model/services/app_helper.dart';
-import 'package:firebase_mvvm/model/services/auth_service.dart';
 import 'package:firebase_mvvm/model/services/base/base_widget.dart';
-import 'package:firebase_mvvm/model/services/firebase_auth_service.dart';
-import 'package:firebase_mvvm/view/screens/splash_screen.dart';
-import 'package:firebase_mvvm/view/widgets/approve_exit_dialog.dart';
 import 'package:firebase_mvvm/view/widgets/main_progress.dart';
 import 'package:firebase_mvvm/view/widgets/task_item.dart';
 import 'package:firebase_mvvm/viewmodel/home_screen_viewmodel.dart';
@@ -28,24 +23,8 @@ class HomeScreen extends StatelessWidget {
             title: const Text("Tasks List"),
             actions: [
               IconButton(
-                onPressed: () {
-                  model.getAllTasks();
-                },
-                icon: const Icon(Icons.get_app),
-              ),
-              IconButton(
                 icon: const Icon(Icons.logout_sharp),
-                onPressed: () async {
-                  final res = await showDialog(
-                    context: context,
-                    builder: (context) => ApproveExitDialog(context: context),
-                  );
-                  if (res == true) {
-                    await FirebaseAuthService().signOut();
-                    await AuthService().signOut();
-                    AppHelper.pushReplaceAll(context, const SplashScreen());
-                  }
-                },
+                onPressed: model.onExitPressed,
               ),
             ],
           ),

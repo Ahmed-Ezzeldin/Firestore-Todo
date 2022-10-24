@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
 
 class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// ================================================================= Get Collection
-  Future<QuerySnapshot<Map<String, dynamic>>> getDocData({
+  /// ================================================================= Get Collection Data
+  static Future<QuerySnapshot<Map<String, dynamic>>> getColData({
     required String collectionPath,
-    required String docPath,
-    required Map<String, dynamic> data,
   }) async {
     late QuerySnapshot<Map<String, dynamic>> data;
     try {
@@ -21,15 +20,14 @@ class FirestoreService {
     return data;
   }
 
-  /// ================================================================= Get Document
-  Future<DocumentSnapshot<Map<String, dynamic>>> getCollectionData({
+  /// ================================================================= Get Document Data
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getDocData({
     required String collectionPath,
-    required String docPath,
-    required Map<String, dynamic> data,
+    required String id,
   }) async {
     late DocumentSnapshot<Map<String, dynamic>> data;
     try {
-      data = await _firestore.collection(collectionPath).doc(docPath).get();
+      data = await _firestore.collection(collectionPath).doc(id).get();
     } on FirebaseException catch (error) {
       AppHelper.printt(error);
     } catch (error) {
@@ -39,13 +37,13 @@ class FirestoreService {
   }
 
   /// ================================================================= Set Document
-  Future<void> setData({
+  static Future<void> setData({
     required String collectionPath,
-    required String docPath,
+    required String id,
     required Map<String, dynamic> data,
   }) async {
     try {
-      _firestore.collection(collectionPath).doc(docPath).set(data);
+      _firestore.collection(collectionPath).doc(id).set(data);
     } on FirebaseException catch (error) {
       AppHelper.printt(error);
     } catch (error) {
@@ -54,13 +52,13 @@ class FirestoreService {
   }
 
   /// ================================================================= Update Document
-  Future<void> updateData({
+  static Future<void> updateData({
     required String collectionPath,
-    required String docPath,
+    required String id,
     required Map<String, dynamic> data,
   }) async {
     try {
-      _firestore.collection(collectionPath).doc(docPath).update(data);
+      _firestore.collection(collectionPath).doc(id).update(data);
     } on FirebaseException catch (error) {
       AppHelper.printt(error);
     } catch (error) {
@@ -69,12 +67,12 @@ class FirestoreService {
   }
 
   /// ================================================================= Delete Document
-  Future<void> deleteDoc({
+  static Future<void> deleteDoc({
     required String collectionPath,
-    required String docPath,
+    required String id,
   }) async {
     try {
-      _firestore.collection(collectionPath).doc(docPath).delete();
+      _firestore.collection(collectionPath).doc(id).delete();
     } on FirebaseException catch (error) {
       AppHelper.printt(error);
     } catch (error) {
