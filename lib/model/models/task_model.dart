@@ -3,14 +3,14 @@ class TaskModel {
   String? title;
   String? content;
   String? createAt;
-  String? lastupdate;
+  String? updateAt;
 
   TaskModel({
     required this.id,
     required this.title,
     required this.content,
     required this.createAt,
-    required this.lastupdate,
+    required this.updateAt,
   });
 
   TaskModel.fromJson(Map<String, dynamic> json) {
@@ -18,7 +18,7 @@ class TaskModel {
     title = json["title"];
     content = json["content"];
     createAt = json["createAt"];
-    lastupdate = json["lastupdate"];
+    updateAt = json["updateAt"];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +27,7 @@ class TaskModel {
     data["title"] = title;
     data["content"] = content;
     data["createAt"] = createAt;
-    data["lastupdate"] = lastupdate;
+    data["updateAt"] = updateAt;
     return data;
   }
 }

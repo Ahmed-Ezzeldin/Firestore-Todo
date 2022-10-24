@@ -72,6 +72,8 @@ class MainButton extends StatelessWidget {
                       elevation: elevation,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius!)),
                     ),
+                    onPressed: onPressed,
+                    onLongPress: onLongPress,
                     child: Padding(
                       padding: padding,
                       child: Text(
@@ -80,8 +82,6 @@ class MainButton extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    onPressed: onPressed,
-                    onLongPress: onLongPress,
                   ),
           );
         }
@@ -119,6 +119,8 @@ class MainButton extends StatelessWidget {
                       side: BorderSide(color: butColor, style: BorderStyle.solid, width: 2),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius!)),
                     ),
+                    onPressed: onPressed,
+                    onLongPress: onLongPress,
                     child: Padding(
                       padding: padding,
                       child: Text(
@@ -127,8 +129,6 @@ class MainButton extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    onPressed: onPressed,
-                    onLongPress: onLongPress,
                   ),
           );
         }
@@ -166,6 +166,8 @@ class MainButton extends StatelessWidget {
                       textStyle: textStyle,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius!)),
                     ),
+                    onPressed: onPressed,
+                    onLongPress: onLongPress,
                     child: Padding(
                       padding: padding,
                       child: Text(
@@ -173,8 +175,6 @@ class MainButton extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    onPressed: onPressed,
-                    onLongPress: onLongPress,
                   ),
           );
         }

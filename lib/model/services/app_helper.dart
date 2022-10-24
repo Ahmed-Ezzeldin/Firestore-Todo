@@ -24,8 +24,6 @@ class AppHelper {
   }) {
     return Navigator.of(
       context,
-      // *** rootNavigator (true) to pushing contents above all subsequent instances ***
-      // *** ( i used with CupertinoTabView to remove bottom bar from bottom ) ***
       rootNavigator: rootNavigator,
     ).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => page),
@@ -51,32 +49,6 @@ class AppHelper {
         print(object);
       }
     }
-  }
-
-  /// ================================================================= Colored Print
-  static printColor(dynamic text, {String color = "green"}) {
-    Map<String, String> colorsMap = {
-      // -------------- Text colors --------------
-      "reset": "\x1B[0m",
-      "black": "\x1B[30m",
-      "red": "\x1B[31m",
-      "green": "\x1B[32m",
-      "yellow": "\x1B[33m",
-      "blue": "\x1B[34m",
-      "magenta": "\x1B[35m",
-      "cyan": "\x1B[36m",
-      "white": "\x1B[37m",
-      // ----------- Background colors ------------
-      "back1": "\x1B[40m",
-      "back2": "\x1B[41m",
-      "back3": "\x1B[42m",
-      "back4": "\x1B[43m",
-      "back5": "\x1B[44m",
-      "back6": "\x1B[45m",
-      "back7": "\x1B[46m",
-      "back8": "\x1B[47m",
-    };
-    Platform.isAndroid ? AppHelper.printt("${colorsMap[color] ?? "\x1B[32m"} $text\x1B[0m") : AppHelper.printt(text);
   }
 
   /// =================================================================  Print Formated Object
@@ -146,20 +118,5 @@ class AppHelper {
               ),
       ),
     );
-  }
-
-  /// ================================================================= Check Internet Connection
-  static Future<bool> isHasInternet(BuildContext context) async {
-    bool isHasInternet = false;
-    try {
-      final result = await InternetAddress.lookup("google.com");
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        isHasInternet = true;
-      }
-    } on SocketException catch (e) {
-      AppHelper.printt("$e");
-      isHasInternet = false;
-    }
-    return isHasInternet;
   }
 }

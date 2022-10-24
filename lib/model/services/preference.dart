@@ -3,16 +3,9 @@ import 'package:firebase_mvvm/model/services/app_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefKeys {
-  static const String isFirstLaunch = "isFirstLaunch";
-  static const String isNotification = "isNotification";
   static const String isUserLoged = "isUserLoged";
-  static const String languageCode = "languageCode";
-  static const String languageName = "languageName";
-  static const String isDark = "isDark";
-  static const String theme = "theme";
   static const String user = "user";
   static const String token = "token";
-  static const String fcmToken = "fcmToken";
 }
 
 class Preference {
@@ -20,7 +13,7 @@ class Preference {
   static Future<void> initialize() async {
     if (sharedPref == null) {
       sharedPref = await SharedPreferences.getInstance();
-      setDefaultValues(getString(PrefKeys.theme) == null);
+      setDefaultValues(getString(PrefKeys.isUserLoged) == null);
     }
   }
 
@@ -28,11 +21,6 @@ class Preference {
   /// ============================================================== Set Default Values
   static void setDefaultValues(bool isNullValue) {
     if (isNullValue) {
-      setString(PrefKeys.theme, "Light");
-      setString(PrefKeys.languageCode, "en");
-      setString(PrefKeys.languageName, "English");
-      setBool(PrefKeys.isFirstLaunch, true);
-      setBool(PrefKeys.isNotification, true);
       setBool(PrefKeys.isUserLoged, false);
       log("*** setDefaultValues is called ***");
     }
@@ -58,14 +46,6 @@ class Preference {
     return null;
   }
 
-  static int? getInt(String key) {
-    try {
-      return sharedPref!.getInt(key);
-    } catch (error) {
-      AppHelper.printt(error);
-    }
-    return null;
-  }
 
   /// =================================================================================
   /// ============================================================================  Set
@@ -87,14 +67,6 @@ class Preference {
     return null;
   }
 
-  static Future<bool?> setInt(String key, int value) async {
-    try {
-      return await sharedPref!.setInt(key, value);
-    } catch (error) {
-      AppHelper.printt(error);
-    }
-    return null;
-  }
 
   /// =================================================================================
   /// ========================================================================== Reload
