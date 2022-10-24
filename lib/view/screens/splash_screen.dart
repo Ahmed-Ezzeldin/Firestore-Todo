@@ -12,7 +12,6 @@ class SplashScreen extends StatelessWidget {
       model: SplashScreenViewmodel(context: context),
       builder: (_, model, child) {
         return Scaffold(
-          // appBar: AppBar(title: const Text("Splash Screen")),
           backgroundColor: AppColors.primaryColor,
           body: Container(
             width: double.infinity,

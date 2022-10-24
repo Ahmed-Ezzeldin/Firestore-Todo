@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_mvvm/model/models/task_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 
 class HomeScreenViewmodel extends BaseModel {
   final BuildContext context;
-
   HomeScreenViewmodel({required this.context});
 
   List<TaskModel> tasksList = [];
@@ -26,8 +24,11 @@ class HomeScreenViewmodel extends BaseModel {
   Future<void> getAllTasks() async {
     try {
       setBusy();
-      QuerySnapshot querySnapshot = await firestore.collection(auth.user?.uid ?? "Not_User").get();
-      tasksList = querySnapshot.docs.map((e) => TaskModel.fromJson(e.data() as Map<String, dynamic>)).toList();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await firestore.collection(auth.user?.uid ?? "Not_User").get();
+      tasksList = querySnapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
+      // AppHelper.printObject(tasksList);
+      AppHelper.printObject(tasksList);
     } catch (error) {
       AppHelper.printt(error);
     }

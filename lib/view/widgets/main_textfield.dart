@@ -184,18 +184,6 @@ class MainTextField extends StatelessWidget {
                 return "Required";
               }
               return null;
-
-            /// ============================================================================ [ Username ]
-            /*
-              r"^(?=.{3,30}$)(?![._-])(?![0-9])(?!.*[._-]{2})[a-zA-Z0-9._-]+(?<![._-])$"
-                 └────┬─────┘└──┬────┘└────┬──┘└─────┬──────┘└─────┬──────┘ └───┬─────┘
-                      │         │          │         │             │            No . or _ or - at the end
-                      │         │          │         │             Allowed characters
-                      │         │          │         No .. or __ or -- or .- or ._ or -_ inside
-                      │         │          No 0-9 at the beginning     
-                      │         No . or _ or - at the beginning
-                      Username is 3-30 characters long
-            */
             case Validator.username:
               RegExp regExp = RegExp(
                 r"^(?=.{3,30}$)(?![._-])(?![0-9])(?!.*[._-]{2})[a-zA-Z0-9._-]+(?<![._-])$",
@@ -210,18 +198,6 @@ class MainTextField extends StatelessWidget {
               return null;
 
             /// ============================================================================ [ Email ]
-            /*
-              r"^(?=.{8,45}$)(?!.*[._]{2})(?![._])([a-zA-Z0-9._]+)@(?!.*[._]{2})([a-zA-Z0-9._]+(?<![._]))\.([a-zA-Z]{2,5})$"
-                 └─────┬────┘└─────┬─────┘└───┬──┘└───────┬──────┘ └─────┬─────┘└─────┬──────┘ └───┬───┘ └───────┬───────┘  
-                       │           │          │           │              │            │            │             end with . and 2:5 characters 
-                       │           │          │           │              │            │            No . or _ or - at the end
-                       │           │          │           │              │            Allowed characters after @
-                       │           │          │           │              No .. or __ or _. or ._  after @
-                       │           │          │           Allowed characters before @
-                       │           │          No . or _  at the beginning
-                       │          No .. or __ or _. or ._  before @
-                       Email is 8-45 characters long
-            */
             case Validator.email:
               RegExp regExp = RegExp(
                 r"^(?=.{8,45}$)(?!.*[._]{2})(?![._])([a-zA-Z0-9._]+)@(?!.*[._]{2})([a-zA-Z0-9._]+(?<![._]))\.([a-zA-Z]{2,5})$",
@@ -233,51 +209,12 @@ class MainTextField extends StatelessWidget {
               }
               return null;
 
-            /// ============================================================================ [ Phone ]
-            case Validator.phone:
-              // RegExp regExp = RegExp(r'(^(?:[+0]20)?[0-9]{10,11}$)'); // Validte for Egyption mobile number ex:( +201009547433 , 01009547433 )
-              RegExp regExp = RegExp(r'(^(?:[+0]9)?[0-9]{8,14}$)');
-              if (value!.trim().isEmpty) {
-                return "Please enter phone number";
-              } else if (!regExp.hasMatch(value)) {
-                return "Please enter valid phone number";
-              }
-              return null;
-
-            /// ============================================================================ [ Number ]
-            case Validator.number:
-              double? number = double.tryParse(value!);
-              if (value.trim().isEmpty) {
-                return "Required";
-              } else if (number == null) {
-                return "Please enter valid number";
-              }
-              return null;
-
             /// ============================================================================ [ Password ]
             case Validator.password:
               if (value!.trim().isEmpty) {
                 return "Please enter your password";
               } else if (value.length < 8) {
                 return "Password is at lest 8 Char";
-              }
-              return null;
-
-            /// ============================================================================ [ MinLength ]
-            case Validator.minLength:
-              if (value!.trim().isEmpty) {
-                return "Required";
-              } else if (value.length < 8) {
-                return "Minimum length is 8 characters";
-              }
-              return null;
-
-            /// ============================================================================ [ MaxLength ]
-            case Validator.maxLength:
-              if (value!.trim().isEmpty) {
-                return "Required";
-              } else if (value.length > 12) {
-                return "Maximum length is 12 characters";
               }
               return null;
 

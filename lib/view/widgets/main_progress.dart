@@ -4,13 +4,10 @@ import 'package:firebase_mvvm/view/styles/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-enum ProgressType { circular, linear }
-
 class MainProgress extends StatelessWidget {
   final Color color;
   final double diameter;
   final double stroke;
-  final ProgressType type;
   final double height;
   final double? linearWidth;
 
@@ -21,39 +18,23 @@ class MainProgress extends StatelessWidget {
     this.diameter = 35,
     this.height = 4,
     this.linearWidth,
-    this.type = ProgressType.circular,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget progress;
-    switch (type) {
-      case ProgressType.circular:
-        progress = Center(
-          child: SizedBox(
-            height: diameter,
-            width: diameter,
-            child: Platform.isAndroid
-                ? CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                    strokeWidth: stroke,
-                  )
-                : CupertinoActivityIndicator(
-                    radius: diameter * 0.5,
-                  ),
-          ),
-        );
-        break;
-      case ProgressType.linear:
-        progress = SizedBox(
-          width: linearWidth,
-          child: LinearProgressIndicator(
-            minHeight: height,
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
-        );
-        break;
-    }
-    return progress;
+    return Center(
+      child: SizedBox(
+        height: diameter,
+        width: diameter,
+        child: Platform.isAndroid
+            ? CircularProgressIndicator.adaptive(
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                strokeWidth: stroke,
+              )
+            : CupertinoActivityIndicator(
+                radius: diameter * 0.5,
+              ),
+      ),
+    );
   }
 }
