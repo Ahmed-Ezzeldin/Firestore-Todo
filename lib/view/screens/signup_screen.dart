@@ -58,6 +58,15 @@ class SignupScreen extends StatelessWidget {
                       validator: Validator.password,
                       hint: "Password",
                     ),
+                    MainTextField(
+                      controller: model.confirmPasswordController,
+                      borderType: BorderType.underline,
+                      prefixIcon: const Icon(Icons.password),
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: Validator.isMatch,
+                      matchedValue: model.passwordController.text,
+                      hint: "Confirm Password",
+                    ),
                     SizedBox(height: mediaSize.height * 0.06),
                     model.busy
                         ? const MainProgress()

@@ -21,6 +21,7 @@ class SignupScreenViewmodel extends BaseModel {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   void submitFun() {
     if (formKey.currentState!.validate()) {
