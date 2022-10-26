@@ -1,33 +1,34 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:firebase_mvvm/model/models/task_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
-import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/firestore_service.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:flutter/material.dart';
 
-class AddTaskScreenViewmodel extends BaseModel {
-  final BuildContext context;
-  final TaskModel? task;
-  AddTaskScreenViewmodel({required this.context, this.task}) {
-    if (task != null) {
-      titleController.text = task?.title ?? "";
-      contentController.text = task?.content ?? "";
-    }
-  }
+class AddTaskScreenViewmodel extends ChangeNotifier {
+  AddTaskScreenViewmodel();
+
+  bool isBusy = false;
+  TaskModel? task;
 
   final formKey = GlobalKey<FormState>();
   var autovalidateMode = AutovalidateMode.disabled;
-  final titleController = TextEditingController();
-  final contentController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
 
-  Future<void> createTask() async {
+  void setTaskValues(TaskModel? taskModel) {
+    titleController.text = taskModel?.title ?? "";
+    contentController.text = taskModel?.content ?? "";
+    // notifyListeners();
+  }
+
+  Future<void> createTask(BuildContext context) async {
     if (formKey.currentState!.validate()) {
-      setBusy();
       AppHelper.unfocusFun(context);
       String currentTime = DateTime.now().toString();
       try {
-        setBusy();
+        isBusy = true;
+        notifyListeners();
         FirestoreService.setData(collectionPath: auth.user?.uid ?? "Not_User", id: currentTime, data: {
           "id": currentTime,
           "title": titleController.text,
@@ -39,20 +40,22 @@ class AddTaskScreenViewmodel extends BaseModel {
       } catch (error) {
         AppHelper.printt(error);
       }
+      isBusy = false;
+      notifyListeners();
       Navigator.of(context).pop(true);
     } else {
       autovalidateMode = AutovalidateMode.always;
-      setState();
     }
-    setIdle();
+    notifyListeners();
   }
 
-  Future<void> updateTask(String id) async {
+  Future<void> updateTask(BuildContext context, String id) async {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
       String currentTime = DateTime.now().toString();
       try {
-        setBusy();
+        isBusy = true;
+        notifyListeners();
         FirestoreService.updateData(collectionPath: auth.user?.uid ?? "Not_User", id: id, data: {
           "title": titleController.text,
           "content": contentController.text,
@@ -62,10 +65,12 @@ class AddTaskScreenViewmodel extends BaseModel {
       } catch (error) {
         AppHelper.printt(error);
       }
+      isBusy = false;
+      notifyListeners();
       Navigator.of(context).pop(true);
     } else {
       autovalidateMode = AutovalidateMode.always;
-      setState();
+      notifyListeners();
     }
   }
 }

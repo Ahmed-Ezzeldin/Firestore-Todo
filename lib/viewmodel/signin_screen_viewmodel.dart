@@ -2,37 +2,38 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_mvvm/model/models/user_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
-import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/fireauth_service.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-class SigninScreenViewmodel extends BaseModel {
-  final BuildContext context;
-  SigninScreenViewmodel({required this.context}) {
+class SigninScreenViewmodel extends ChangeNotifier {
+  SigninScreenViewmodel() {
     emailController.text = "ahmed@test.com";
     passwordController.text = "123456789";
   }
+
+  bool isBusy = false;
 
   final formKey = GlobalKey<FormState>();
   var autovalidateMode = AutovalidateMode.disabled;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void submitFun() {
+  void submitFun(BuildContext context) {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
-      signIn();
+      signIn(context);
     } else {
       autovalidateMode = AutovalidateMode.always;
-      setState();
+      notifyListeners();
     }
   }
 
-  void signIn() async {
+  void signIn(BuildContext context) async {
     try {
-      setBusy();
+      isBusy = true;
+      notifyListeners();
       UserCredential credential = await FireauthService.signIn(
         email: emailController.text,
         password: passwordController.text,
@@ -59,6 +60,7 @@ class SigninScreenViewmodel extends BaseModel {
     } catch (error) {
       AppHelper.printt(error);
     }
-    setIdle();
+    isBusy = false;
+    notifyListeners();
   }
 }

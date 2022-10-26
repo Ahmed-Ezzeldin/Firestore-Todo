@@ -3,19 +3,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_mvvm/model/models/user_model.dart';
 import 'package:firebase_mvvm/model/services/app_helper.dart';
-import 'package:firebase_mvvm/model/services/base/base_model.dart';
 import 'package:firebase_mvvm/model/services/fireauth_service.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:firebase_mvvm/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-class SignupScreenViewmodel extends BaseModel {
-  final BuildContext context;
-  SignupScreenViewmodel({required this.context}) {
+class SignupScreenViewmodel extends ChangeNotifier {
+  SignupScreenViewmodel() {
     emailController.text = "ahmed@test.com";
     passwordController.text = "123456789";
   }
 
+  bool isBusy = false;
   final formKey = GlobalKey<FormState>();
   var autovalidateMode = AutovalidateMode.disabled;
   final nameController = TextEditingController();
@@ -23,19 +22,20 @@ class SignupScreenViewmodel extends BaseModel {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  void submitFun() {
+  void submitFun(BuildContext context) {
     if (formKey.currentState!.validate()) {
       AppHelper.unfocusFun(context);
-      signUp();
+      signUp(context);
     } else {
       autovalidateMode = AutovalidateMode.always;
-      setState();
+      notifyListeners();
     }
   }
 
-  void signUp() async {
+  void signUp(BuildContext context) async {
     try {
-      setBusy();
+      isBusy = true;
+      notifyListeners();
       UserCredential credential = await FireauthService.signUp(
         email: emailController.text,
         password: passwordController.text,
@@ -62,6 +62,7 @@ class SignupScreenViewmodel extends BaseModel {
     } catch (error) {
       AppHelper.printt(error);
     }
-    setIdle();
+    isBusy = false;
+    notifyListeners();
   }
 }

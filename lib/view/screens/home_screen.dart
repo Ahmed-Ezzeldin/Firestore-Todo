@@ -1,39 +1,44 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_mvvm/model/models/task_model.dart';
-import 'package:firebase_mvvm/model/services/base/base_widget.dart';
 import 'package:firebase_mvvm/view/widgets/main_progress.dart';
 import 'package:firebase_mvvm/view/widgets/task_item.dart';
 import 'package:firebase_mvvm/viewmodel/home_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<HomeScreenViewmodel>(
-      initState: (model) => WidgetsBinding.instance.addPostFrameCallback((_) {
-        model.getAllTasks();
-      }),
-      model: HomeScreenViewmodel(context: context),
-      builder: (_, model, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Tasks List"),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.logout_sharp),
-                onPressed: model.onExitPressed,
-              ),
-            ],
+    final viewModel = Provider.of<HomeScreenViewmodel>(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Tasks List"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout_sharp),
+            onPressed: () {
+              viewModel.onExitPressed(context);
+            },
           ),
-          body: model.busy
-              ? const MainProgress()
+        ],
+      ),
+      body: viewModel.isBusy
+          ? const MainProgress()
+          : viewModel.tasksList.isEmpty
+              ? const Center(
+                  child: Text(
+                    "There is no tasks added yet,\n try add new one.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                  ),
+                )
               : ListView.builder(
-                  itemCount: model.tasksList.length,
+                  itemCount: viewModel.tasksList.length,
                   itemBuilder: (context, index) {
-                    TaskModel task = model.tasksList[index];
+                    TaskModel task = viewModel.tasksList[index];
                     return Dismissible(
                       key: Key(task.id!),
                       background: const SizedBox(),
@@ -48,26 +53,24 @@ class HomeScreen extends StatelessWidget {
                       ),
                       direction: DismissDirection.endToStart,
                       onDismissed: (_) {
-                        model.onDismissed(index);
+                        viewModel.onDismissed(index);
                       },
                       child: TaskItem(
                         title: "${task.title}",
                         content: "${task.content}",
                         onTap: () async {
-                          model.onAddPressed(task: task);
+                          viewModel.onAddPressed(context: context, task: task);
                         },
                       ),
                     );
                   },
                 ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              model.onAddPressed();
-            },
-            child: const Icon(Icons.add, size: 30),
-          ),
-        );
-      },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          viewModel.onAddPressed(context: context);
+        },
+        child: const Icon(Icons.add, size: 30),
+      ),
     );
   }
 }

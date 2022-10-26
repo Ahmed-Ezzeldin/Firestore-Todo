@@ -3,6 +3,11 @@ import 'package:firebase_mvvm/model/services/auth_service.dart';
 import 'package:firebase_mvvm/model/services/preference.dart';
 import 'package:firebase_mvvm/model/services/provider_setup.dart';
 import 'package:firebase_mvvm/view/screens/splash_screen.dart';
+import 'package:firebase_mvvm/viewmodel/add_task_screen_viewmodel.dart';
+import 'package:firebase_mvvm/viewmodel/home_screen_viewmodel.dart';
+import 'package:firebase_mvvm/viewmodel/signin_screen_viewmodel.dart';
+import 'package:firebase_mvvm/viewmodel/signup_screen_viewmodel.dart';
+import 'package:firebase_mvvm/viewmodel/splash_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +35,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => SplashScreenViewmodel()),
+        ChangeNotifierProvider(create: (_) => SigninScreenViewmodel()),
+        ChangeNotifierProvider(create: (_) => SignupScreenViewmodel()),
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => HomeScreenViewmodel()),
+        ChangeNotifierProvider(create: (_) => AddTaskScreenViewmodel()),
       ],
       child: MaterialApp(
         title: "Firebase ToDo",
