@@ -26,8 +26,11 @@ void main() {
     } else {
       value = "Signin Faild";
     }
+    print("Email: ($email) , Password: ($password) \nresult: $value");
+    print("=====================================================");
     return value;
   }
+
   String signUpTest(String email, String password) {
     String userEmail = "user@test.com";
     String userPassword = "123456789";
@@ -51,10 +54,12 @@ void main() {
     } else {
       value = "Signup Faild";
     }
+    print("Email: ($email) , Password: ($password) \nresult: $value");
+    print("=====================================================");
     return value;
   }
 
-  group("Authentication", () { 
+  group("Authentication", () {
     test("Sign In", () {
       String result = "";
       result = signInTest("", "123123123");

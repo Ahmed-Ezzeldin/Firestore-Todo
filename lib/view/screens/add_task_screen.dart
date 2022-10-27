@@ -22,7 +22,7 @@ class AddTaskScreen extends StatelessWidget {
       builder: (_, model, child) {
         return Scaffold(
           appBar: AppBar(
-            title: task == null ? const Text("Add Task Screen") : const Text("Add Task Screen"),
+            title: task == null ? const Text("Add Task Screen") : const Text("Update Task Screen"),
           ),
           body: SingleChildScrollView(
             child: Container(
